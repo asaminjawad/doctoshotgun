@@ -131,6 +131,17 @@ class CenterResultPage(JsonPage):
 class CenterPage(HTMLPage):
     pass
 
+class HtmlPageBuilder():
+
+    @classmethod
+    def construct(cls, html_page):
+        page = None
+        if html_page == 'Centers_Page':
+            page = CentersPage
+        elif html_page == 'Center_Page':
+            page = CenterPage
+
+        return page
 
 class CenterBookingPage(JsonPage):
     def find_motive(self, regex, singleShot=False):
@@ -570,8 +581,8 @@ class DoctolibDE(Doctolib):
         KEY_ASTRAZENECA: 'AstraZeneca',
         KEY_ASTRAZENECA_SECOND: 'Zweit.*AstraZeneca|AstraZeneca.*Zweit',
     }
-    centers = URL(r'/impfung-covid-19-corona/(?P<where>\w+)', CentersPage)
-    center = URL(r'/praxis/.*', CenterPage)
+    centers = URL(r'/impfung-covid-19-corona/(?P<where>\w+)', HtmlPageBuilder.construct('Centers_Page'))
+    center = URL(r'/praxis/.*', HtmlPageBuilder.construct('Center_Page'))
 
 
 class DoctolibFR(Doctolib):
@@ -597,8 +608,8 @@ class DoctolibFR(Doctolib):
         KEY_ASTRAZENECA_SECOND: '2de.*AstraZeneca',
     }
 
-    centers = URL(r'/vaccination-covid-19/(?P<where>\w+)', CentersPage)
-    center = URL(r'/centre-de-sante/.*', CenterPage)
+    centers = URL(r'/vaccination-covid-19/(?P<where>\w+)', HtmlPageBuilder.construct('Centers_Page'))
+    center = URL(r'/centre-de-sante/.*', HtmlPageBuilder.construct('Center_Page'))
 
 
 class Application:
