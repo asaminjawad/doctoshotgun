@@ -213,6 +213,16 @@ class MasterPatientPage(JsonPage):
 class CityNotFound(Exception):
     pass
 
+class DocLibAdapter():
+
+    def __init__(self, doctolib=None):
+        self.doctolib = doctolib
+
+    def do_login(self, code):
+        return self.doctolib.do_login(code)
+
+    def get_patients(self):
+        return self.doctolib.get_patients()
 
 class Doctolib(LoginBrowser):
     # individual properties for each country. To be defined in subclasses
@@ -683,10 +693,11 @@ class Application:
 
         docto = doctolib_map[args.country](
             args.username, args.password, responses_dirname=responses_dirname)
-        if not docto.do_login(args.code):
+        doclibAdapter = DocLibAdapter(docto)
+        if not doclibAdapter.do_login(args.code):
             return 1
 
-        patients = docto.get_patients()
+        patients = doclibAdapter.get_patients()
         if len(patients) == 0:
             print("It seems that you don't have any Patient registered in your Doctolib account. Please fill your Patient data on Doctolib Website.")
             return 1
