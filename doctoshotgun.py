@@ -348,6 +348,12 @@ class Doctolib(LoginBrowser):
         normalized = re.sub(r'\W', '-', normalized)
         return normalized.lower()
 
+    
+    #precondition:
+    # center, vaccine_list, start_date, end_date, only_second, only_third must not be null.
+    # center, vaccine_list, start_date, end_date, only_second, only_third must be valid in the right format
+    # dry_run should be false
+    
     def try_to_book(self, center, vaccine_list, start_date, end_date, only_second, only_third, dry_run=False):
         self.open(center['url'])
         p = urlparse(center['url'])
@@ -384,6 +390,11 @@ class Doctolib(LoginBrowser):
 
         return False
 
+    #postcondition:
+    #if successful, method will return true 
+    #if failed, method will return false
+    
+    
     def try_to_book_place(self, profile_id, motive_id, practice_id, agenda_ids, vac_name, start_date, end_date, only_second, only_third, dry_run=False):
         date = start_date.strftime('%Y-%m-%d')
         while date is not None:
